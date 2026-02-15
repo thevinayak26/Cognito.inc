@@ -1,0 +1,12 @@
+venv/
+backend/venv/
+backend/venv_mac/
+.DS_Store
+__pycache__/
+*.pyc
+node_modules/
+
+.env
+backend/.env
+.env
+backend/.env
