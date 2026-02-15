@@ -6,16 +6,17 @@
 
 > A computational gastronomy engine that transforms leftover ingredients into safe, personalized meal recommendations using molecular flavor science and nutritional intelligence.
 
-**Built for:** Foodoscope ForkIT Challenge 2025  
-**Hosted by:** IIIT Delhi – CoSy Lab  
-**Website:** NutriLogic  
-**Demo:** [Live Demo Link] | **Presentation:** [Slides Link](https://www.canva.com/design/DAHAPoibNi4/BlUzHYm1l92CKV9yWty05Q/edit?utm_content=DAHAPoibNi4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+**Built for:** Foodoscope ForkIT Challenge 2025
+**Hosted by:** IIIT Delhi - CoSy Lab
+**Website:** NutriLogic
+**Presentation:** [Slides Link](https://www.canva.com/design/DAHAPoibNi4/BlUzHYm1l92CKV9yWty05Q/edit?utm_content=DAHAPoibNi4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Current Status](#current-status)
 - [Problem Statement](#problem-statement)
 - [Solution](#solution)
 - [Key Features](#key-features)
@@ -23,11 +24,9 @@
 - [Scoring Model](#scoring-model)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
+- [Verified Test Case](#verified-test-case)
 - [API Documentation](#api-documentation)
-- [Usage Examples](#usage-examples)
-- [Screenshots](#screenshots)
 - [Roadmap](#roadmap)
-- [Contributing](#contributing)
 - [Team](#team)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
@@ -40,7 +39,7 @@
 
 - Nutritional Intelligence (RecipeDB)
 - Molecular Flavor Science (FlavorDB)
-- Diet & Allergy Filtering
+- Diet and Allergy Filtering
 - Macro-based Scoring
 - Cuisine-aware Flavor Alignment
 
@@ -52,6 +51,17 @@ We help users reduce food waste while ensuring meals are healthy, safe, and flav
 - **48% of people with dietary restrictions** struggle to find safe recipes
 - Traditional recipe apps ignore **molecular flavor compatibility**
 - Health-conscious users need **macro-aware recommendations**
+
+---
+
+## Current Status
+
+> **IMPORTANT:** Only the **Standard Mode** flow is fully functional at this time.
+> Special modes (Period-Friendly, Stress Mode, Pet-Safe, Medical Report, Doctor Review, Community Kitchen) are available in the UI but have not been fully tested and may not produce reliable results.
+>
+> **Use the Standard Mode flow:** Landing -> Ingredients -> Health -> Goals -> Preferences -> Advanced -> Results
+
+The external APIs (RecipeDB and FlavorDB hosted at cosylab.iiitd.edu) may be intermittently available. When they are unreachable, the system falls back to a built-in recipe database of 12+ Indian recipes with pre-computed flavor profiles. All core features (scoring, flavor radar charts, nutritional breakdown) work fully with the fallback data.
 
 ---
 
@@ -78,7 +88,7 @@ Users often have leftover ingredients but struggle to create meals that:
 Our system performs **multi-constraint optimization** through:
 
 ### 1. Ingredient Analysis
-Accepts leftover ingredients and validates availability.
+Accepts leftover ingredients and validates availability against a known ingredient database.
 
 ### 2. Hard Filtering
 - **Diet Compliance:** Ensures recipes match selected diet (Keto, Vegan, etc.)
@@ -86,25 +96,23 @@ Accepts leftover ingredients and validates availability.
 
 ### 3. Macro Validation
 Validates recipes against user-specified macro targets:
-- Minimum protein requirements
-- Carbohydrate limits
-- Fat constraints
+- Calorie range constraints
+- Protein range constraints
+- Maximum cook time
+- Excluded ingredients
 
 ### 4. Molecular Flavor Analysis
-Uses FlavorDB to compute flavor compatibility:
-- Identifies shared flavor molecules between ingredients
-- Evaluates functional groups
-- Considers aroma threshold values
-- Generates **Flavor Harmony Score**
+Uses FlavorDB to compute flavor compatibility across 8 dimensions:
+- Sweet, Sour, Bitter, Salty, Umami, Spicy, Fruity, Smoky
+- Generates per-recipe **Flavor Dimension Radar Charts**
+- Falls back to built-in flavor profiles for 20+ common ingredients
 
 ### 5. Cuisine Alignment
 Boosts scores for cuisine-typical flavor patterns:
-- Indian: cumin, turmeric, coriander
-- Italian: basil, oregano, garlic
-- Thai: lemongrass, galangal, fish sauce
+- Punjabi, Bengali, South Indian, Gujarati, Maharashtrian, and more
 
 ### 6. Intelligent Ranking
-Outputs optimized meal suggestions with **explainable reasoning**.
+Outputs optimized meal suggestions with **explainable score breakdowns**.
 
 ---
 
@@ -112,70 +120,32 @@ Outputs optimized meal suggestions with **explainable reasoning**.
 
 ### Core Features
 
-#### 1. Ingredient Input
-- Natural language ingredient entry
-- Comma-separated or autocomplete interface
-- Smart ingredient recognition
+| Feature | Description |
+|---------|-------------|
+| Ingredient Input | Autocomplete ingredient entry from a database of 23 common ingredients |
+| Diet Filtering | Keto, Vegan, Vegetarian, High-Protein, Low-Carb, Low-Fat, Gluten-Free, Diabetic-Friendly |
+| Allergy Filtering | Dairy, Nuts, Gluten, Soy, Eggs, Shellfish, Fish |
+| Health Goals | Muscle Gain, Weight Loss, Diabetic Control, Liver Care, High Energy, Light Digestive, Immune Boost, Skin Health |
+| Cuisine Preference | Punjabi, Bengali, South Indian, Gujarati, Maharashtrian, Bihari, UP, No Preference |
+| Cooking Style | Gravy, Dry, Roasted, Slow-cooked, Stir-fried, Steamed, Pressure-cooked, Tandoor |
+| Advanced Filters | Calorie range, protein range, max cook time, spice tolerance, servings, excluded ingredients |
+| Flavor Radar Chart | 8-dimension flavor profile visualization per recipe (Recharts) |
+| Score Breakdown | Per-recipe explainable match percentages: Ingredient, Diet, Goal, Cuisine, Mode |
+| Flavor Pairings | Suggestions to improve weak flavor dimensions |
+| Similar Recipes | "You might also like" section with additional matches |
 
-#### 2. Diet & Allergy Filtering
-Hard filters ensure safety:
-- **Diets:** Keto, Vegan, Vegetarian, Paleo, High-Protein, Low-Carb, Mediterranean
-- **Allergens:** Dairy, Gluten, Nuts, Soy, Eggs, Shellfish, Fish
+### Score Breakdown Example
 
-#### 3. Macro Optimization
-Specify your macro targets:
-```
-Protein: 25-35g per meal
-Carbs: < 30g (for Keto)
-Fat: 15-25g
-```
-Recipes are scored based on macro fit.
+Each recommendation includes a transparent score breakdown:
 
-#### 4. Flavor Compatibility Scoring
-Using FlavorDB molecular data:
-- **Shared Molecules:** Identifies common flavor compounds
-- **Functional Groups:** Analyzes chemical similarity
-- **Aroma Thresholds:** Weighs impact on flavor perception
-- **Output:** Flavor Harmony Score (0-100)
+```
+Overall Match: 77/100
 
-#### 5. Cuisine Alignment
-Preference-aware scoring:
-- Boosts cuisine-typical flavor patterns
-- Adjusts ingredient compatibility weights
-- Suggests authentic ingredient combinations
-
-#### 6. Leftover Utilization Score
-Maximizes use of available ingredients:
-```
-Leftover Usage = (Matched Ingredients / Total Available) × 100
-```
-
-#### 7. Explainable Output
-Each recommendation includes:
-
-**Score Breakdown:**
-```
-Overall Score: 87/100
-├─ Flavor Harmony: 92/100 (High molecular overlap)
-├─ Macro Fit: 85/100 (Protein: 28g ✓, Carbs: 22g ✓)
-├─ Cuisine Alignment: 88/100 (Italian flavor profile)
-└─ Leftover Utilization: 83/100 (5/6 ingredients used)
-```
-
-**Molecular Explanation:**
-```
-Why this pairing works:
-• Tomato + Basil share 12 flavor molecules
-• Chicken + Garlic: Compatible functional groups
-• Overall harmony: Strong (8 shared compounds)
-```
-
-**Suggested Substitutes:**
-```
-Missing: Mozzarella
-Molecular alternatives:
-• Ricotta (0.89 similarity)
-• Feta (0.82 similarity)
+  Ingredients Match:  75%  (3 of 4 ingredients overlapping)
+  Diet Match:        100%  (Vegetarian + High Protein both satisfied)
+  Goal Match:        100%  (Muscle Gain tags present)
+  Cuisine Match:      30%  (North Indian region, Punjabi preferred)
+  Advanced Match:    100%  (Within calorie, protein, and cook time limits)
 ```
 
 ---
@@ -183,174 +153,90 @@ Molecular alternatives:
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        INPUT LAYER                          │
-├─────────────────────────────────────────────────────────────┤
-│  • Leftover Ingredients                                     │
-│  • Diet Selection (Keto, Vegan, etc.)                       │
-│  • Allergens to Avoid                                       │
-│  • Macro Targets (Protein, Carbs, Fat)                      │
-│  • Cuisine Preference (Optional)                            │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│                     PROCESSING LAYER                        │
-├─────────────────────────────────────────────────────────────┤
-│  1. Recipe Retrieval (RecipeDB API)                         │
-│     └─ Fetch recipes by ingredients & diet                  │
-│                                                             │
-│  2. Hard Filtering                                          │
-│     ├─ Diet Compliance Filter                               │
-│     └─ Allergen Safety Filter                               │
-│                                                             │
-│  3. Nutritional Validation (RecipeDB)                       │
-│     └─ Validate macro ranges                                │
-│                                                             │
-│  4. Molecular Flavor Analysis (FlavorDB)                    │
-│     ├─ Fetch flavor molecules for each ingredient           │
-│     ├─ Calculate molecular overlap                          │
-│     ├─ Evaluate functional group compatibility              │
-│     └─ Generate Flavor Harmony Score                        │
-│                                                             │
-│  5. Cuisine Pattern Matching                                │
-│     └─ Boost scores for cuisine-typical combinations        │
-│                                                             │
-│  6. Multi-Constraint Scoring Engine                         │
-│     └─ Weighted scoring across all dimensions               │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│                       OUTPUT LAYER                          │
-├─────────────────────────────────────────────────────────────┤
-│  • Top N Ranked Recipes (Sorted by Overall Score)           │
-│  • Score Breakdown (Explainable)                            │
-│  • Molecular Explanation                                    │
-│  • Nutritional Summary                                      │
-│  • Suggested Ingredient Substitutes                         │
-│  • Flavor Profile Visualization                             │
-└─────────────────────────────────────────────────────────────┘
+FRONTEND (React + Vite, port 5175)            BACKEND (Flask, port 5000)
++---------------------------------+            +-----------------------------------+
+| Landing Page                    |            |                                   |
+|   |                             |            |  POST /api/recommend              |
+|   v                             |            |    |                               |
+| Ingredients Step (Step 1 of 5)  |            |    +-- Fetch from RecipeDB API     |
+|   |                             |   POST     |    |     (with fallback)           |
+|   v                             | ---------> |    +-- Score all recipes           |
+| Health Step (Step 2 of 5)       |            |    |     against user inputs       |
+|   |                             |            |    +-- Compute flavor profiles     |
+|   v                             |            |    |     via FlavorDB API          |
+| Goals Step (Step 3 of 5)        |            |    |     (with built-in fallback)  |
+|   |                             |            |    +-- Sort by score, return top 8 |
+|   v                             |            |                                   |
+| Preferences Step (Step 4 of 5)  |            |  GET /api/recipes/search          |
+|   |                             |            |  GET /api/recipes/by-diet         |
+|   v                             |            |  GET /api/recipes/by-cuisine      |
+| Advanced Step (Step 5 of 5)     |            |  GET /api/flavor/profile/:name    |
+|   |                             |            |  GET /api/flavor/compute          |
+|   v                             |  <-------  |                                   |
+| Results Page                    |   JSON     +-----------------------------------+
+|   - Flavor Radar Chart          |
+|   - Recipe Cards with Scores    |            External APIs:
+|   - Nutrition Breakdown         |            - RecipeDB (cosylab.iiitd.edu)
+|   - Flavor Pairings             |            - FlavorDB (cosylab.iiitd.edu.in:6969)
+|   - Similar Recipes             |
++---------------------------------+
 ```
 
 ---
 
 ## Scoring Model
 
-Our multi-constraint scoring system uses weighted optimization:
-
-### Formula
+### Formula (100 points total)
 
 ```
-Final Score = w₁ × Flavor_Score + w₂ × Macro_Fit + w₃ × Cuisine_Alignment + w₄ × Leftover_Utilization
-
-Where:
-w₁ = 0.35 (Flavor weight)
-w₂ = 0.30 (Nutrition weight)
-w₃ = 0.20 (Cuisine weight)
-w₄ = 0.15 (Utilization weight)
+Final Score = Ingredient Match (40 pts)
+            + Diet Match (20 pts)
+            + Goal Match (15 pts)
+            + Cuisine Match (10 pts)
+            + Advanced Filters (15 pts)
+            + Mode Bonus (up to 10 bonus pts)
 ```
 
-### Component Calculations
+### Component Details
 
-#### 1. Flavor Harmony Score (0-100)
-```python
-shared_molecules = count_shared_flavor_compounds(ingredient_set)
-functional_similarity = calculate_functional_group_overlap(ingredient_set)
-aroma_impact = weighted_aroma_threshold_score(ingredient_set)
+| Component | Max Points | How It Works |
+|-----------|-----------|--------------|
+| Ingredient Match | 40 | Overlap between user ingredients and recipe ingredients |
+| Diet Match | 20 | How many of the user's selected diets match recipe diet tags |
+| Goal Match | 15 | Overlap between user health goals and recipe health tags |
+| Cuisine Match | 10 | Whether recipe region matches preferred cuisine |
+| Advanced Filters | 15 | Penalties for violating calorie range, protein range, cook time, or excluded ingredients |
+| Mode Bonus | 10 | Extra points for mode-specific tags (e.g., Period-Friendly, Stress-Friendly) |
 
-Flavor_Score = (0.5 × shared_molecules_normalized + 
-                0.3 × functional_similarity + 
-                0.2 × aroma_impact) × 100
-```
-
-#### 2. Macro Fit Score (0-100)
-```python
-protein_deviation = abs(actual_protein - target_protein) / target_protein
-carb_deviation = abs(actual_carbs - target_carbs) / target_carbs
-fat_deviation = abs(actual_fat - target_fat) / target_fat
-
-Macro_Fit = 100 - (protein_deviation + carb_deviation + fat_deviation) / 3 × 100
-```
-
-#### 3. Cuisine Alignment Score (0-100)
-```python
-cuisine_typical_ingredients = get_cuisine_profile(cuisine_type)
-matched_typical = count_matches(recipe_ingredients, cuisine_typical_ingredients)
-
-Cuisine_Alignment = (matched_typical / len(cuisine_typical_ingredients)) × 100
-```
-
-#### 4. Leftover Utilization Score (0-100)
-```python
-Leftover_Utilization = (ingredients_used / ingredients_available) × 100
-```
-
-### Example Calculation
-
-**Input:**
-- Ingredients: chicken, tomatoes, basil, garlic, onion
-- Diet: Mediterranean
-- Macros: Protein 30g, Carbs 25g, Fat 20g
-- Cuisine: Italian
-
-**Recipe: Chicken Cacciatore**
-
-```
-Flavor Score:
-  • Shared molecules: 14 (tomato-basil: 12, garlic-onion: 8)
-  • Functional similarity: 0.87
-  • Aroma impact: 0.92
-  → Flavor_Score = 91/100
-
-Macro Fit:
-  • Protein: 32g (deviation: 6.7%)
-  • Carbs: 23g (deviation: 8.0%)
-  • Fat: 18g (deviation: 10.0%)
-  → Macro_Fit = 91.8/100
-
-Cuisine Alignment:
-  • Italian typical ingredients matched: 4/5 (80%)
-  → Cuisine_Alignment = 88/100
-
-Leftover Utilization:
-  • Ingredients used: 5/5 (100%)
-  → Leftover_Utilization = 100/100
-
-Final Score = 0.35 × 91 + 0.30 × 91.8 + 0.20 × 88 + 0.15 × 100
-            = 31.85 + 27.54 + 17.6 + 15
-            = 91.99/100
-```
+Final scores are normalized to 0-100 with a small random variance of +/-3 points for variety.
 
 ---
 
 ## Tech Stack
 
 ### Backend
-- **Language:** Python 3.12.10+
-- **Framework:** Flask 
-- **API Client:** RecipeDB + FlavorDB
-- **Data Processing:** Native Python (dictionaries, sets)
+- **Language:** Python 3.9+
+- **Framework:** Flask 3.1.2
+- **CORS:** Flask-CORS
+- **API Client:** requests
 - **Environment:** python-dotenv for API key management
 
 ### Frontend
-- **Framework:** React.js with Vite
+- **Framework:** React 19.2 with Vite
 - **Styling:** Tailwind CSS
-- **HTTP Client:** Axios
-- **Icons:** Lucide React 
+- **Charts:** Recharts (radar charts)
+- **Animations:** Framer Motion
+- **Icons:** Lucide React
+- **Routing:** React Router DOM 7
 
 ### APIs Used
 - **RecipeDB API** - Recipe data, nutrition info, diet filtering
   - Base URL: `http://cosylab.iiitd.edu/recipe2-api`
-  - Endpoints: `/recipesinfo`, `/nutritioninfo`, `/recipe-diet`, `/protein-range`
+  - Endpoints: `/recipes/recipesinfo`, `/recipes/nutritioninfo`, `/recipes/recipe-diet`, `/recipes/cuisine`, `/recipes/ingredients`
 
 - **FlavorDB API** - Molecular flavor data, pairings, functional groups
   - Base URL: `http://cosylab.iiitd.edu.in:6969/flavordb`
-  - Endpoints: `/by-alias`, `/by-femaFlavorProfile`, `/by-natural-source`
-
-### Development Tools
-- **Version Control:** Git + GitHub
-- **API Testing:** Postman
-- **Linting:** ESLint (JS), Black (Python)
-- **Documentation:** Swagger / OpenAPI
+  - Endpoints: `/molecules_data/by-commonName`, `/molecules_data/by-flavorProfile`, `/entity_details`
 
 ---
 
@@ -358,16 +244,9 @@ Final Score = 0.35 × 91 + 0.30 × 91.8 + 0.20 × 88 + 0.15 × 100
 
 ### Prerequisites
 
-```bash
-# Required
 - Python 3.8 or higher
-- Node.js 14+ (for frontend)
+- Node.js 16+ and npm
 - API keys from Foodoscope ForkIT Challenge organizers
-
-# Optional
-- Redis (for caching)
-- Docker (for containerization)
-```
 
 ### Installation
 
@@ -380,18 +259,21 @@ cd nutrilogic
 #### 2. Backend Setup
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+cd backend
 
 # Install dependencies
-pip install -r requirements.txt
+pip install flask flask-cors python-dotenv requests
 
-# Create .env file
-cp .env.example .env
-# Edit .env and add your API keys:
-# RECIPEDB_API_KEY=your_key_here
-# FLAVORDB_API_KEY=your_key_here
+# Verify .env file exists with API keys:
+cat .env
+# Should contain:
+#   RECIPEDB_API_KEY=your_key_here
+#   FLAVORDB_API_KEY=your_key_here
+#   FLASK_SECRET_KEY=your_secret_key
+#   GOOGLE_CLIENT_ID=your_google_client_id
+#   GOOGLE_CLIENT_SECRET=your_google_client_secret
+#   GOOGLE_REDIRECT_URI=http://localhost:5000/auth/google/callback
+#   FRONTEND_URL=http://localhost:5175
 ```
 
 #### 3. Frontend Setup
@@ -401,35 +283,98 @@ cd frontend
 
 # Install dependencies
 npm install
-
-# Create .env.local file
-cp .env.example .env.local
-# Add backend API URL
 ```
 
 #### 4. Run the Application
 
-**Backend:**
+**Terminal 1 - Backend:**
 ```bash
-# Development mode
-python app.py
-
-# Or with Flask
-flask run
-
-# Or with Gunicorn (production)
-gunicorn -w 4 app:app
+cd backend
+python3 app.py
+# Server starts on http://127.0.0.1:5000
 ```
 
-**Frontend:**
+**Terminal 2 - Frontend:**
 ```bash
 cd frontend
 npm run dev
+# Server starts on http://localhost:5175
 ```
 
-**Access the app:**
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:5000
+**Access the app at:** http://localhost:5175
+
+---
+
+## Verified Test Case
+
+The following test case has been verified to produce a successful output with 8 recipe recommendations.
+
+### Step-by-Step (Standard Mode)
+
+| Step | Page | URL | What to Select |
+|------|------|-----|----------------|
+| 1 | Ingredients | `/ingredients` | Add: **tomato**, **onion**, **spinach**, **garlic** |
+| 2 | Health Profile | `/health` | Diet: **Vegetarian**, **High Protein** |
+| 3 | Goals | `/goals` | Select: **Muscle Gain**, **Weight Loss** |
+| 4 | Preferences | `/preferences` | Cuisine: **Punjabi** / Style: **Gravy** |
+| 5 | Advanced | `/advanced` | Leave defaults, click **Generate Report** |
+
+### Expected Output on Results Page
+
+The system returns 8 ranked recipes:
+
+| Rank | Recipe | Score |
+|------|--------|-------|
+| 1 | Tandoori Vegetable Kebab | 77 |
+| 2 | Lentil and Spinach Dal | 72 |
+| 3 | Palak Paneer | 71 |
+| 4 | Paneer Tikka Masala | 70 |
+| 5 | Chana Masala | 67 |
+| 6 | Mushroom Stir-fry | 48 |
+| 7 | Aloo Gobi | 48 |
+| 8 | Mixed Vegetable Curry | 48 |
+
+Note: Scores may vary by +/-3 points due to randomized variance.
+
+Each recipe card shows:
+- Match score badge
+- Cook time, servings, calories
+- Progress bars for Ingredients, Diet Match, Goal Match, Cuisine match
+- Expandable details with flavor radar chart, nutrition breakdown, diet tags, and micronutrients
+
+The results page also includes:
+- **Overall Flavor Profile** radar chart across 8 dimensions
+- **Flavor Pairing Suggestions** to improve weak flavor dimensions
+- **You Might Also Like** section with 4 additional recipe suggestions
+
+### Equivalent cURL Test
+
+You can verify the backend directly with this command:
+
+```bash
+curl -s -X POST http://localhost:5000/api/recommend \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ingredients": ["tomato", "onion", "spinach", "garlic"],
+    "diet": ["Vegetarian", "High Protein"],
+    "goals": ["Muscle Gain", "Weight Loss"],
+    "cuisine": ["Punjabi"],
+    "style": ["Gravy"],
+    "allergies": [],
+    "conditions": [],
+    "advanced": {
+      "calorieRange": [0, 2000],
+      "proteinRange": [0, 100],
+      "maxCookTime": 60,
+      "spiceTolerance": 3,
+      "servings": 2,
+      "excludeIngredients": []
+    },
+    "specialMode": null
+  }'
+```
+
+Expected response: JSON with `recipes` array (8 items), `overall_flavor_profile`, `flavor_pairings`, and `similar_recipes`.
 
 ---
 
@@ -437,263 +382,124 @@ npm run dev
 
 ### Backend Endpoints
 
-#### 1. Optimize Recipes
-```http
-POST /api/optimize
-Content-Type: application/json
+#### POST /api/recommend (Main Endpoint)
+The primary recommendation engine. Accepts all user inputs, scores recipes, and returns ranked results with flavor data.
 
+```http
+POST /api/recommend
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
 {
-  "ingredients": ["chicken", "tomatoes", "basil"],
-  "diet": "mediterranean",
-  "allergens": ["gluten", "dairy"],
-  "macros": {
-    "protein_min": 25,
-    "protein_max": 35,
-    "carbs_max": 30,
-    "fat_min": 15,
-    "fat_max": 25
+  "ingredients": ["tomato", "onion", "spinach"],
+  "diet": ["Vegetarian"],
+  "goals": ["Weight Loss"],
+  "cuisine": ["South Indian"],
+  "style": ["Gravy"],
+  "advanced": {
+    "calorieRange": [0, 2000],
+    "proteinRange": [0, 100],
+    "maxCookTime": 60,
+    "excludeIngredients": []
   },
-  "cuisine": "italian",
-  "top_n": 5
+  "specialMode": null
 }
 ```
 
 **Response:**
 ```json
 {
-  "status": "success",
-  "results": [
+  "recipes": [
     {
-      "recipe": {
-        "id": "12345",
-        "name": "Chicken Cacciatore",
-        "ingredients": [...],
-        "instructions": [...],
-        "nutrition": {
-          "calories": 420,
-          "protein": 32,
-          "carbs": 23,
-          "fat": 18
-        }
+      "title": "Palak Paneer",
+      "cuisine": "Indian",
+      "region": "North Indian",
+      "description": "Creamy spinach puree with soft paneer cubes...",
+      "cook_time": 35,
+      "servings": 4,
+      "calories": 300,
+      "protein": 18,
+      "carbs": 12,
+      "fat": 20,
+      "fiber": 6,
+      "ingredients": ["spinach", "paneer", "onion", "garlic", ...],
+      "diet_tags": ["Vegetarian", "High Protein", "Low Carb"],
+      "health_tags": ["Muscle Gain", "Skin Health", "Immune Boost"],
+      "micronutrients": ["Iron", "Calcium", "Vitamin A", ...],
+      "score": 77,
+      "breakdown": {
+        "ingredient_match": 75,
+        "diet_match": 100,
+        "goal_match": 100,
+        "cuisine_match": 30,
+        "advanced_match": 100,
+        "mode_match": 50
       },
-      "scores": {
-        "overall": 91.99,
-        "flavor_harmony": 91,
-        "macro_fit": 91.8,
-        "cuisine_alignment": 88,
-        "leftover_utilization": 100
-      },
-      "explanation": {
-        "molecular_matches": [
-          {"pair": "tomato-basil", "shared_molecules": 12},
-          {"pair": "garlic-onion", "shared_molecules": 8}
-        ],
-        "macro_analysis": "Excellent protein match, low carbs suitable for Mediterranean diet",
-        "cuisine_notes": "Authentic Italian flavor profile"
-      },
-      "substitutes": [...]
+      "flavor_profile": {
+        "sweet": 24, "sour": 22, "bitter": 19,
+        "salty": 6, "umami": 48, "spicy": 24,
+        "fruity": 19, "smoky": 14
+      }
     }
   ],
-  "metadata": {
-    "total_analyzed": 150,
-    "filtered_out": 145,
-    "processing_time_ms": 234
-  }
+  "total_results": 12,
+  "overall_flavor_profile": { ... },
+  "flavor_pairings": [ ... ],
+  "similar_recipes": [ ... ]
 }
 ```
 
-#### 2. Get Flavor Analysis
-```http
-GET /api/flavor-analysis?ingredients=tomato,basil,garlic
-```
+#### Other Endpoints
 
-#### 3. Suggest Substitutes
-```http
-GET /api/substitutes?ingredient=mozzarella&cuisine=italian
-```
-
----
-
-## Usage Examples
-
-### Example 1: Keto Meal with Leftover Chicken
-
-**Input:**
-```javascript
-{
-  ingredients: ["chicken breast", "broccoli", "cream", "cheese"],
-  diet: "keto",
-  allergens: [],
-  macros: {
-    protein_min: 30,
-    carbs_max: 10,
-    fat_min: 20
-  }
-}
-```
-
-**Output:**
-```
-Top Recommendation: Creamy Garlic Chicken with Broccoli
-Score: 94/100
-
-Flavor Harmony: 89/100
-  - Cream + Garlic: 8 shared molecules
-  - Chicken + Broccoli: Compatible functional groups
-
-Macro Fit: 96/100
-  - Protein: 35g (meets target)
-  - Carbs: 7g (meets target)
-  - Fat: 24g (meets target)
-
-Keto Compliant: Yes
-Allergen Safe: Yes
-Leftover Use: 100% (4/4 ingredients)
-```
-
-### Example 2: Vegan Meal with Indian Cuisine Preference
-
-**Input:**
-```javascript
-{
-  ingredients: ["chickpeas", "spinach", "tomatoes", "onion", "garlic"],
-  diet: "vegan",
-  allergens: ["nuts"],
-  macros: {
-    protein_min: 15,
-    carbs_max: 45,
-    fat_max: 10
-  },
-  cuisine: "indian"
-}
-```
-
-**Output:**
-```
-Top Recommendation: Chana Palak (Chickpea Spinach Curry)
-Score: 92/100
-
-Flavor Harmony: 95/100
-  - High molecular overlap in Indian spice profile
-  - Spinach + Garlic: 10 shared aroma compounds
-
-Macro Fit: 88/100
-  - Protein: 18g (meets target)
-  - Carbs: 42g (meets target)
-  - Fat: 8g (meets target)
-
-Cuisine Alignment: 94/100
-  - Authentic Indian flavor pattern
-  - Typical ingredient combinations
-
-Suggested Addition: Cumin (molecular similarity: 0.91)
-```
-
----
-
-## Screenshots
-
-### Main Dashboard
-![Dashboard](docs/screenshots/dashboard.png)
-
-### Recipe Results with Score Breakdown
-![Results](docs/screenshots/results.png)
-
-### Flavor Analysis Visualization
-![Flavor Analysis](docs/screenshots/flavor-analysis.png)
-
-### Molecular Explanation
-![Molecular View](docs/screenshots/molecular-view.png)
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/recipes/search?ingredients=tomato,onion` | Search recipes by ingredients |
+| GET | `/api/recipes/by-diet?diet=Vegetarian` | Get recipes by diet type |
+| GET | `/api/recipes/by-cuisine?cuisine=Indian` | Get recipes by cuisine |
+| GET | `/api/recipes/all?page=0&limit=10` | Get paginated recipes |
+| GET | `/api/recipes/nutrition/<recipe_id>` | Get nutrition info for a recipe |
+| GET | `/api/flavor/profile/<ingredient>` | Get flavor profile for an ingredient |
+| GET | `/api/flavor/compute?ingredients=tomato,onion` | Compute aggregate flavor profile |
+| GET | `/api/flavor/by-profile?profile=spicy` | Get molecules by flavor profile |
+| GET | `/api/pet/toxic-foods/<pet_type>` | Get toxic foods for a pet type |
+| GET | `/api/community/meals` | Get community surplus meals |
 
 ---
 
 ## Roadmap
 
-### Phase 1: Core Features (Completed)
-- [x] Multi-constraint optimization engine
-- [x] RecipeDB & FlavorDB integration
-- [x] Scoring system implementation
-- [x] Basic UI/UX
+### Completed
+- [x] Multi-constraint scoring engine with 5 scoring dimensions
+- [x] RecipeDB and FlavorDB API integration with fallback data
+- [x] 8-dimension flavor radar chart visualization
+- [x] 5-step guided input flow (Standard Mode)
+- [x] Explainable score breakdowns per recipe
+- [x] Flavor pairing suggestions
+- [x] Google OAuth login
+- [x] Responsive dark-theme UI
 
-### Phase 2: Enhanced Intelligence (In Progress)
-- [ ] Machine learning-based flavor prediction
-- [ ] Adaptive learning from user preferences
+### In Progress
+- [ ] Full testing and stabilization of special modes (Period, Stress, Pet, Medical, Doctor, Community)
 - [ ] Real-time macro tracking
 - [ ] Nutrition timeline visualization
 
-### Phase 3: Smart Integrations (Planned)
-- [ ] Integration with fitness wearables (Fitbit, Apple Watch)
+### Planned
+- [ ] Integration with fitness wearables
 - [ ] Smart grocery list generation
 - [ ] Calendar-based meal planning
 - [ ] Voice input for ingredients
-- [ ] Barcode scanner for packaged foods
-
-### Phase 4: Advanced Features (Future)
-- [ ] Computer vision for ingredient recognition
-- [ ] Collaborative filtering recommendations
-- [ ] Social features (share recipes, meal plans)
-- [ ] Offline mode with cached recipes
 - [ ] Multi-language support
-- [ ] Restaurant menu analysis
-
----
-
-## Contributing
-
-We welcome contributions! Here's how you can help:
-
-### How to Contribute
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/AmazingFeature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add some AmazingFeature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/AmazingFeature
-   ```
-5. **Open a Pull Request**
-
-### Contribution Guidelines
-
-- Follow PEP 8 for Python code
-- Use ESLint configuration for JavaScript
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation
-
-### Areas for Contribution
-
-- Bug fixes
-- New features
-- Documentation improvements
-- UI/UX enhancements
-- Testing coverage
-- Translations
 
 ---
 
 ## Team
 
-### Core Team
-
-**[Your Name]** - Project Lead & Backend Developer  
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?logo=github)](https://github.com/YOUR-USERNAME)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Profile-blue?logo=linkedin)](https://linkedin.com/in/YOUR-PROFILE)
-
-**[Teammate 2]** - Frontend Developer & UI/UX  
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?logo=github)](https://github.com/TEAMMATE-2)
-
-**[Teammate 3]** - Data Science & Algorithm Design  
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?logo=github)](https://github.com/TEAMMATE-3)
-
-**[Teammate 4]** - API Integration & Testing  
-[![GitHub](https://img.shields.io/badge/GitHub-Profile-black?logo=github)](https://github.com/TEAMMATE-4)
+**[Your Name]** - Project Lead and Backend Developer
+**[Teammate 2]** - Frontend Developer and UI/UX
+**[Teammate 3]** - Data Science and Algorithm Design
+**[Teammate 4]** - API Integration and Testing
 
 ---
 
@@ -701,101 +507,24 @@ We welcome contributions! Here's how you can help:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
-MIT License
-
-Copyright (c) 2026 NutriLogic Team
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
 ---
 
 ## Acknowledgments
 
-### Special Thanks
-
 - **IIIT Delhi CoSy Lab** - For hosting Foodoscope ForkIT Challenge 2025
-- **RecipeDB Team** - For providing comprehensive recipe and nutrition data
-- **FlavorDB Team** - For groundbreaking molecular flavor science research
-- **Hackathon Mentors** - For guidance and support throughout the event
-- **Open Source Community** - For amazing tools and libraries
+- **RecipeDB Team** - For comprehensive recipe and nutrition data
+- **FlavorDB Team** - For molecular flavor science research
+- **Open Source Community** - Flask, React, Recharts, Tailwind CSS, Framer Motion, Lucide
 
 ### Research References
 
 1. Ahn, Y. Y., et al. (2011). "Flavor network and the principles of food pairing." *Scientific Reports*
-2. FlavorDB Research: [https://cosylab.iiitd.edu.in/flavordb/](https://cosylab.iiitd.edu.in/flavordb/)
-3. RecipeDB Documentation: [http://cosylab.iiitd.edu/recipe2-api](http://cosylab.iiitd.edu/recipe2-api)
-
-### Technologies
-
-Built with amazing open-source technologies:
-- [Flask](https://flask.palletsprojects.com/)
-- [React](https://reactjs.org/)
-- [Bootstrap](https://getbootstrap.com/)
-- [Chart.js](https://www.chartjs.org/)
-- And many more...
+2. FlavorDB: https://cosylab.iiitd.edu.in/flavordb/
+3. RecipeDB: http://cosylab.iiitd.edu/recipe2-api
 
 ---
 
-## Contact & Support
-
-### Questions or Feedback?
-
-- **Email:** contact@nutrilogic.com
-- **GitHub Issues:** [Report a bug or request a feature](https://github.com/YOUR-USERNAME/nutrilogic/issues)
-- **Website:** [NutriLogic](https://nutrilogic.com)
-
-### Project Links
-
-- **Documentation:** [Full Docs](https://docs.nutrilogic.com)
-- **Live Demo:** [Try it now](https://demo.nutrilogic.com)
-- **Presentation:** [Slides](https://your-slides-link.com)
-- **Video Demo:** [YouTube](https://youtube.com/your-video)
-
----
-
-## Project Stats
-
-![GitHub stars](https://img.shields.io/github/stars/YOUR-USERNAME/nutrilogic?style=social)
-![GitHub forks](https://img.shields.io/github/forks/YOUR-USERNAME/nutrilogic?style=social)
-![GitHub issues](https://img.shields.io/github/issues/YOUR-USERNAME/nutrilogic)
-![GitHub pull requests](https://img.shields.io/github/issues-pr/YOUR-USERNAME/nutrilogic)
-
----
-
-## Hackathon Details
-
-**Event:** Foodoscope ForkIT Challenge 2025  
-**Date:** February 14-15, 2026  
-**Location:** IIIT Delhi  
-**Track:** Computational Gastronomy  
-**Award:** [If applicable]
-
----
-
-<div align="center">
-
-**Star this repo if you find it helpful!**
-
-Made with passion during Foodoscope ForkIT Challenge 2025
-
-[Report Bug](https://github.com/YOUR-USERNAME/nutrilogic/issues) · [Request Feature](https://github.com/YOUR-USERNAME/nutrilogic/issues) · [Documentation](https://docs.nutrilogic.com)
-
-</div>
+**Event:** Foodoscope ForkIT Challenge 2025
+**Date:** February 14-15, 2026
+**Location:** IIIT Delhi
+**Track:** Computational Gastronomy
