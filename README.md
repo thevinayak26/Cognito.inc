@@ -88,7 +88,7 @@ Users often have leftover ingredients but struggle to create meals that:
 Our system performs **multi-constraint optimization** through:
 
 ### 1. Ingredient Analysis
-Accepts leftover ingredients and validates availability against a known ingredient database.
+Accepts leftover ingredients and validates availability against a known ingredient from database.
 
 ### 2. Hard Filtering
 - **Diet Compliance:** Ensures recipes match selected diet (Keto, Vegan, etc.)
